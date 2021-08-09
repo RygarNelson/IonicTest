@@ -1,0 +1,7 @@
+{
+  "name": "coolweb",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

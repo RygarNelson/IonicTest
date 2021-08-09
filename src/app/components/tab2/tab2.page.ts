@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { Platform } from '@ionic/angular';
 
 import { PhotoService } from '../../services/photo.service';
 
@@ -14,17 +13,9 @@ https://stackoverflow.com/questions/46048904/no-provider-for-camera-injectionerr
 */
 export class Tab2Page {
 
-  constructor(public photoService: PhotoService, public platform: Platform) {}
+  constructor(public photoService: PhotoService) {}
 
   public addPhotoToGallery(){
-    // this.platform.ready().then(() => {
-    //   if(this.platform.is("cordova")){
-    //     this.photoService.addNewPhotoToGallery();
-    //   }
-    // },
-    // (error) => {
-    //   console.log(error);
-    // })
     this.photoService.addNewPhotoToGallery();
   }
 

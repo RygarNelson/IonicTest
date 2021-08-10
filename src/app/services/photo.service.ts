@@ -11,7 +11,7 @@ import { IPhoto } from '../interfaces/photo.interface';
 
 /*
 https://stackoverflow.com/questions/52055126/not-allowed-to-load-local-resource-ionic-3-android/55934321#55934321
-https://stackoverflow.com/questions/48878116/convert-cordova-image-picker-results-to-base64-format-ionic
+https://dbwriteups.wordpress.com/2015/09/19/saving-images-to-app-storage-in-ionic-using-ngcordova/
 */
 export class PhotoService {
   /**Array contenente le foto scattate */
@@ -34,29 +34,32 @@ export class PhotoService {
   public async addNewPhotoToGallery(){
     this.camera.getPicture(this.cameraOptions).then(
       (imageData) => {
-        this.photos.unshift({
-          filepath: 'edai',
-          webviewPath: imageData,
-          convertedFileSrc: this.win.Ionic.WebView.convertFileSrc(imageData)
-        });
-        this.savePicture(imageData);
+        this.savePicture(imageData).then(
+          (savedImage) => {
+            this.photos.unshift({
+              filepath: savedImage.nativeURL,
+              webviewPath: imageData,
+              convertedFileSrc: this.win.Ionic.WebView.convertFileSrc(imageData)
+            });
+            console.log(this.photos);
+          },
+          (error) => {
+            console.log("Errore salvataggio foto su memoria interna");
+            console.log(error);
+          }
+        );
       },
       (error) => {
+        console.log("Errore lettura foto da fotocamera");
         console.log(error);
       }
-    )
+    );
   }
 
+  /**Salvataggio foto su memoria interna del dispositivo */
   private async savePicture(imagePath){
     var sourceDirectory = imagePath.substring(0, imagePath.lastIndexOf('/') + 1);
     var sourceFileName = imagePath.substring(imagePath.lastIndexOf('/') + 1, imagePath.length);
-    this.file.copyFile(sourceDirectory, sourceFileName, this.file.dataDirectory, sourceFileName).then(
-      (savedImage) => {
-        console.log(savedImage);
-      },
-      (error) => {
-        console.log(error)
-      }
-    );
+    return this.file.copyFile(sourceDirectory, sourceFileName, this.file.dataDirectory, sourceFileName);
   }
 }

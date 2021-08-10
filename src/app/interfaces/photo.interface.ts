@@ -1,5 +1,4 @@
 export interface IPhoto {
     filepath: string;
-    webviewPath: string;
-    convertedFileSrc;
+    convertedFileSrc: string;
   }

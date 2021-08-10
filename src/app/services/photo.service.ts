@@ -1,5 +1,4 @@
-import { toBase64String } from '@angular/compiler/src/output/source_map';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Camera, CameraOptions } from "@ionic-native/camera/ngx";
 import { File } from "@ionic-native/file/ngx";
 import { NativeStorage } from "@ionic-native/native-storage/ngx";
@@ -16,6 +15,7 @@ https://dbwriteups.wordpress.com/2015/09/19/saving-images-to-app-storage-in-ioni
 export class PhotoService {
   /**Array contenente le foto scattate */
   public photos: IPhoto[] = [];
+  private PHOTO_STORAGE: string = "photos";
 
   /**Variabile che identifica la finestra corrente */
   private win: any = window;
@@ -28,7 +28,7 @@ export class PhotoService {
     mediaType: this.camera.MediaType.PICTURE
   }
 
-  constructor(private camera: Camera, private file: File) { }
+  constructor(private camera: Camera, private file: File, private nativeStorage: NativeStorage) { }
 
   /**Metodo che salva una foto quando viene scattata */
   public async addNewPhotoToGallery(){
@@ -38,10 +38,17 @@ export class PhotoService {
           (savedImage) => {
             this.photos.unshift({
               filepath: savedImage.nativeURL,
-              webviewPath: imageData,
-              convertedFileSrc: this.win.Ionic.WebView.convertFileSrc(imageData)
+              convertedFileSrc: this.win.Ionic.WebView.convertFileSrc(savedImage.nativeURL)
             });
-            console.log(this.photos);
+            this.nativeStorage.setItem(this.PHOTO_STORAGE, this.photos).then(
+              () => {
+                console.log("Salvataggio su memoria permanente effettuato");
+              },
+              (error) => {
+                console.log("Errore salvataggio permanente su memoria interna");
+                console.log(error);
+              }
+            )
           },
           (error) => {
             console.log("Errore salvataggio foto su memoria interna");
@@ -51,6 +58,18 @@ export class PhotoService {
       },
       (error) => {
         console.log("Errore lettura foto da fotocamera");
+        console.log(error);
+      }
+    );
+  }
+
+  public async loadSaved() {
+    this.nativeStorage.getItem(this.PHOTO_STORAGE).then(
+      (photoList) => {
+        this.photos = photoList;
+      },
+      (error) => {
+        console.log("Errore lettura files");
         console.log(error);
       }
     );

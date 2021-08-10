@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Platform } from '@ionic/angular';
 
 import { PhotoService } from '../../services/photo.service';
 
@@ -10,10 +11,23 @@ import { PhotoService } from '../../services/photo.service';
 
 /*
 https://stackoverflow.com/questions/46048904/no-provider-for-camera-injectionerror 
+https://forum.ionicframework.com/t/native-storage-error-plugin-not-installed/68014
 */
-export class Tab2Page {
+export class Tab2Page implements OnInit{
 
-  constructor(public photoService: PhotoService) {}
+  constructor(public photoService: PhotoService, public platform: Platform) {}
+
+  ngOnInit(): void {
+    this.platform.ready().then(
+      () => {
+        this.photoService.loadSaved();
+      },
+      (error) => {
+        console.log("Errore caricamento piattaforma");
+        console.log(error);
+      }
+    )
+  }
 
   public addPhotoToGallery(){
     this.photoService.addNewPhotoToGallery();

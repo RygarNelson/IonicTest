@@ -47,40 +47,16 @@ export class PhotoService {
     )
   }
 
-  private async savePicture(imageData){
-    let imageName = imageData.split('/').pop();
-    let path = imageData.substring(0, imageData.lastIndexOf("/") + 1);
-    this.file.readAsDataURL(path, imageName).then(
-      (base64File) => {
-        this.convertToBlobImage(base64File.replace('data:image/jpeg;base64,','')).then(
-          (blobImage) => {
-            console.log(blobImage);
-            let fileName = new Date().getTime() + '.jpeg';
-            this.file.writeFile('', fileName, blobImage, {replace: true}).then(
-              (fileWritten) => {
-                console.log(fileWritten)
-              },
-              (error) => {
-                console.log("Errore scrittura file");
-                console.log(error);
-              }
-            );
-          },
-          (error) => {
-            console.log("Errore conversione Blob");
-            console.log(error);
-          }
-        );
+  private async savePicture(imagePath){
+    var sourceDirectory = imagePath.substring(0, imagePath.lastIndexOf('/') + 1);
+    var sourceFileName = imagePath.substring(imagePath.lastIndexOf('/') + 1, imagePath.length);
+    this.file.copyFile(sourceDirectory, sourceFileName, this.file.dataDirectory, sourceFileName).then(
+      (savedImage) => {
+        console.log(savedImage);
       },
       (error) => {
-        console.log("Errore lettura immagine");
-        console.log(error);
+        console.log(error)
       }
-    )
-  }
-
-  private async convertToBlobImage(base64File){
-    const base64Response = await fetch(`data:image/jpeg;base64,${base64File}`);
-    return await base64Response.blob();
+    );
   }
 }

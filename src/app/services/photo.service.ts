@@ -42,7 +42,7 @@ export class PhotoService {
             });
             this.nativeStorage.setItem(this.PHOTO_STORAGE, this.photos).then(
               () => {
-                console.log("Salvataggio su memoria permanente effettuato");
+                console.log("Salvataggio su memoria permanente effettuato.");
               },
               (error) => {
                 console.log("Errore salvataggio permanente su memoria interna");

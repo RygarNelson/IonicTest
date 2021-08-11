@@ -11,12 +11,13 @@ import { AppComponent } from './app/components/app/app.component';
 import { Camera } from "@ionic-native/camera/ngx";
 import { File } from "@ionic-native/file/ngx";
 import { NativeStorage } from "@ionic-native/native-storage/ngx";
+import { Dialogs } from '@ionic-native/dialogs/ngx';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, Camera, File, NativeStorage],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, Camera, File, NativeStorage, Dialogs],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

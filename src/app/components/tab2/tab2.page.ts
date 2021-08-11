@@ -10,7 +10,7 @@ import { PhotoService } from '../../services/photo.service';
 })
 
 /*
-https://stackoverflow.com/questions/46048904/no-provider-for-camera-injectionerror 
+https://stackoverflow.com/questions/46048904/no-provider-for-camera-injectionerror
 https://forum.ionicframework.com/t/native-storage-error-plugin-not-installed/68014
 */
 export class Tab2Page implements OnInit{
@@ -23,10 +23,10 @@ export class Tab2Page implements OnInit{
         this.photoService.loadSaved();
       },
       (error) => {
-        console.log("Errore caricamento piattaforma");
+        console.log('Errore caricamento piattaforma');
         console.log(error);
       }
-    )
+    );
   }
 
   public addPhotoToGallery(){

@@ -1,7 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
-import { Camera, CameraOptions } from "@ionic-native/camera/ngx";
-import { File } from "@ionic-native/file/ngx";
-import { NativeStorage } from "@ionic-native/native-storage/ngx";
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { File } from '@ionic-native/file/ngx';
+import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { IPhoto } from '../interfaces/photo.interface';
 
 @Injectable({
@@ -15,7 +15,7 @@ https://dbwriteups.wordpress.com/2015/09/19/saving-images-to-app-storage-in-ioni
 export class PhotoService {
   /**Array contenente le foto scattate */
   public photos: IPhoto[] = [];
-  private PHOTO_STORAGE: string = "photos";
+  private photoStorage = 'photos';
 
   /**Variabile che identifica la finestra corrente */
   private win: any = window;
@@ -26,7 +26,7 @@ export class PhotoService {
     destinationType: this.camera.DestinationType.FILE_URI,
     encodingType: this.camera.EncodingType.JPEG,
     mediaType: this.camera.MediaType.PICTURE
-  }
+  };
 
   constructor(private camera: Camera, private file: File, private nativeStorage: NativeStorage) { }
 
@@ -40,36 +40,36 @@ export class PhotoService {
               filepath: savedImage.nativeURL,
               convertedFileSrc: this.win.Ionic.WebView.convertFileSrc(savedImage.nativeURL)
             });
-            this.nativeStorage.setItem(this.PHOTO_STORAGE, this.photos).then(
+            this.nativeStorage.setItem(this.photoStorage, this.photos).then(
               () => {
-                console.log("Salvataggio su memoria permanente effettuato");
+                console.log('Salvataggio su memoria permanente effettuato.');
               },
               (error) => {
-                console.log("Errore salvataggio permanente su memoria interna");
+                console.log('Errore salvataggio permanente su memoria interna');
                 console.log(error);
               }
-            )
+            );
           },
           (error) => {
-            console.log("Errore salvataggio foto su memoria interna");
+            console.log('Errore salvataggio foto su memoria interna');
             console.log(error);
           }
         );
       },
       (error) => {
-        console.log("Errore lettura foto da fotocamera");
+        console.log('Errore lettura foto da fotocamera');
         console.log(error);
       }
     );
   }
 
   public async loadSaved() {
-    this.nativeStorage.getItem(this.PHOTO_STORAGE).then(
+    this.nativeStorage.getItem(this.photoStorage).then(
       (photoList) => {
         this.photos = photoList;
       },
       (error) => {
-        console.log("Errore lettura files");
+        console.log('Errore lettura files');
         console.log(error);
       }
     );
@@ -77,8 +77,8 @@ export class PhotoService {
 
   /**Salvataggio foto su memoria interna del dispositivo */
   private async savePicture(imagePath){
-    var sourceDirectory = imagePath.substring(0, imagePath.lastIndexOf('/') + 1);
-    var sourceFileName = imagePath.substring(imagePath.lastIndexOf('/') + 1, imagePath.length);
+    const sourceDirectory = imagePath.substring(0, imagePath.lastIndexOf('/') + 1);
+    const sourceFileName = imagePath.substring(imagePath.lastIndexOf('/') + 1, imagePath.length);
     return this.file.copyFile(sourceDirectory, sourceFileName, this.file.dataDirectory, sourceFileName);
   }
 }
